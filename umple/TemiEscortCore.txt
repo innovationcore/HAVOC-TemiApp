@@ -1,0 +1,44 @@
+class RogueTemiCore {
+
+  state {
+    HomeBase {
+      // Entry point. Temi is at the home base, checking the time.
+      entry / { stateNotify("HomeBase"); };
+      timeBetween9amAnd5pm -> MovingToEntrance;
+    }
+    
+    MovingToEntrance {
+      // Moving to the working location
+      entry / { stateNotify("MovingToEntrance"); };
+      arrivedAtEntrance -> Detecting;
+    }
+
+    Detecting {
+      // Scans for a person
+      entry / { stateNotify("Detecting"); };
+      personDetected -> LlmControl;
+      timeBetween5pmAnd9am -> MovingToHome;
+      timeToPatrol -> Patrolling;
+    }
+
+    Patrolling {
+      //Patrols the office while sending smell data
+      entry / { stateNotify("Patrolling"); };
+      patrolComplete -> Detecting;
+    }
+
+    LlmControl {
+      // Asks if the person needs help
+      entry / { stateNotify("LlmControl"); };
+      emptyQueue -> MovingToEntrance;
+    }
+
+    MovingToHome {
+      // At 5 PM, returns to the home base
+      entry / { stateNotify("MovingToHome"); };
+      arrivedAtHome -> HomeBase;
+    }
+  }
+
+  boolean stateNotify(String node) { return true; }
+}

@@ -1,0 +1,89 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    namespace 'edu.uky.ai.roguetemi'
+    compileSdk 33
+
+    defaultConfig {
+        applicationId "edu.uky.ai.roguetemi"
+        minSdk 30
+        targetSdk 33
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    configurations.implementation {
+        exclude group: 'com.google.code.gson', module: 'gson'
+        exclude group: 'com.google.guava', module: 'listenablefuture'
+    }
+
+    applicationVariants.all { variant ->
+        variant.getRuntimeConfiguration().exclude group: 'com.google.code.findbugs', module: 'jsr305'
+    }
+
+}
+
+//allprojects {
+//    repositories {
+//        maven { url 'https://jitpack.io' }
+//    }
+//}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'], exclude: "okhttp")
+    implementation 'androidx.appcompat:appcompat:1.1.0'
+    implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    implementation 'com.google.android.material:material:1.4.0'
+    testImplementation 'junit:junit:4.13.2'
+    androidTestImplementation 'androidx.test:runner:1.4.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
+    implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.4.0'
+
+
+    implementation(platform("com.squareup.okhttp3:okhttp-bom:4.12.0"))
+
+    // define any required OkHttp artifacts without version
+    implementation("com.squareup.okhttp3:okhttp")
+    implementation("com.squareup.okhttp3:logging-interceptor")
+
+    implementation 'org.nanohttpd:nanohttpd:2.3.1'
+
+
+
+    // Sensor/Smell Sensor
+    implementation 'com.github.mik3y:usb-serial-for-android:3.7.0'
+
+    // For RTSP streaming
+//    implementation 'com.github.pedroSG94.RootEncoder:library:2.5.7'
+//    //Optional, allow use BitmapSource, CameraXSource and CameraUvcSource
+//    implementation 'com.github.pedroSG94.RootEncoder:extra-sources:2.5.7'
+
+
+    // temi SDK
+    //implementation project(':sdk')
+    implementation 'com.robotemi:sdk:1.135.1'
+    implementation 'com.google.code.gson:gson:2.9.0'
+    implementation 'com.google.android.gms:play-services-auth:17.0.0'
+    implementation 'org.apache.commons:commons-text:1.10.0'
+    implementation 'commons-configuration:commons-configuration:1.10'
+
+    implementation 'com.github.bumptech.glide:glide:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+
+    implementation("io.antmedia:webrtc-android-framework:2.8.0-SNAPSHOT")
+
+}
