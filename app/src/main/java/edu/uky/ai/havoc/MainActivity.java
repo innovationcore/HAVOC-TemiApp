@@ -43,8 +43,8 @@ import edu.uky.ai.havoc.actions.ActionManager;
 import edu.uky.ai.havoc.actions.ConversationAction;
 import edu.uky.ai.havoc.actions.TemiAction;
 import edu.uky.ai.havoc.llm.Planner;
-import edu.uky.ai.havoc.statemachine.RogueTemiCore;
-import edu.uky.ai.havoc.statemachine.RogueTemiExtended;
+import edu.uky.ai.havoc.statemachine.HavocCore;
+import edu.uky.ai.havoc.statemachine.HavocExtended;
 import edu.uky.ai.havoc.streaming.DataSendingBackgroundExecutor;
 import edu.uky.ai.havoc.streaming.SmellBackgroundExecutor;
 import edu.uky.ai.havoc.streaming.SmellSensorUtils;
@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity implements
 
     private final ScheduledExecutorService timeChecker = Executors.newSingleThreadScheduledExecutor();
     private final Robot temi = Robot.getInstance();
-    private RogueTemiExtended stateManager;
+    private HavocExtended stateManager;
     private ActionManager actionManager;
     private final Queue<TemiAction> actionQueue = new LinkedList<>();
     private Planner planner;
@@ -138,7 +138,7 @@ public class MainActivity extends AppCompatActivity implements
             }
         });
 
-        stateManager = new RogueTemiExtended(this, temi, face, streamingManager);
+        stateManager = new HavocExtended(this, temi, face, streamingManager);
 //        Should work but not worried about it right now
 //        CommandHttpServer httpServer = new CommandHttpServer(this);
 //        try {
@@ -273,13 +273,13 @@ public class MainActivity extends AppCompatActivity implements
                 Log.e(TAG, "ERROR: Temi is not ready yet! Skipping movement.");
                 return;
             }
-            if (stateManager.getState() != RogueTemiCore.State.HomeBase) {
+            if (stateManager.getState() != HavocCore.State.HomeBase) {
                 if (!streamingManager.connected) {
                     Log.d(TAG, "WebRTC not connected, reconnecting.");
                     streamingManager.restartConnection();
                 }
             }
-            if (stateManager.getState() != RogueTemiCore.State.Detecting && stateManager.getState() != RogueTemiCore.State.HomeBase) {
+            if (stateManager.getState() != HavocCore.State.Detecting && stateManager.getState() != HavocCore.State.HomeBase) {
                 Log.d(TAG, "Temi is not detecting or at home base, skipping time check. Current state: " + stateManager.getStateFullName());
                 return;
             }
@@ -305,7 +305,7 @@ public class MainActivity extends AppCompatActivity implements
 
                 // Handle on-the-hour patrol if we're in Detecting
                 if (now >= nextPatrolTime) {
-                    if (stateManager.getState() == RogueTemiCore.State.Detecting) {
+                    if (stateManager.getState() == HavocCore.State.Detecting) {
                         Log.d(TAG, "Patrolling on the hour.");
                         boolean result = stateManager.timeToPatrol();
                         handleTransition(result, "Patrolling");
@@ -319,7 +319,7 @@ public class MainActivity extends AppCompatActivity implements
                 }
 
                 // Catch up patrol if missed the hour and just became free
-                if (shouldStartPatrolWhenReady && stateManager.getState() == RogueTemiCore.State.Detecting) {
+                if (shouldStartPatrolWhenReady && stateManager.getState() == HavocCore.State.Detecting) {
                     Log.d(TAG, "Catching up on missed patrol.");
                     boolean result = stateManager.timeToPatrol();
                     handleTransition(result, "Patrolling");
@@ -328,7 +328,7 @@ public class MainActivity extends AppCompatActivity implements
                     return;
                 }
 
-                if (stateManager.getState() == RogueTemiCore.State.HomeBase) {
+                if (stateManager.getState() == HavocCore.State.HomeBase) {
                     if (batteryPercentage < 35) {
                         Log.d(TAG, "Battery is low, staying at home base.");
                         return;
@@ -337,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements
                     handleTransition(stateManager.timeBetween9amAnd5pm(), "MovingToWork");
                     temi.goTo(Config.getWorkLocation());
                 }
-                if (stateManager.getState() == RogueTemiCore.State.Detecting) {
+                if (stateManager.getState() == HavocCore.State.Detecting) {
                     if (batteryPercentage < 16) {
                         Log.d(TAG, "Battery is low, going to home base.");
                         //                  Not the original purpose of this transition but it works
@@ -346,7 +346,7 @@ public class MainActivity extends AppCompatActivity implements
                     }
                 }
             } else {
-                if (stateManager.getState() == RogueTemiCore.State.Detecting) {
+                if (stateManager.getState() == HavocCore.State.Detecting) {
                     Log.d(TAG, "Moving to: " + Config.getHomeLocation());
                     handleTransition(stateManager.timeBetween5pmAnd9am(), "ReturningToHome");
                     temi.goTo(Config.getHomeLocation());
@@ -361,7 +361,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     public void onDetectionDataChanged(@NonNull DetectionData detectionData) {
-        if (stateManager.getState() != RogueTemiCore.State.Detecting) {
+        if (stateManager.getState() != HavocCore.State.Detecting) {
             return;
         }
 
@@ -402,10 +402,10 @@ public class MainActivity extends AppCompatActivity implements
     @Override
     public void onGoToLocationStatusChanged(@NonNull String goToLocation, @NonNull String status, int i, @NonNull String desc) {
         Log.d(TAG, "Navigation Update - Location: " + goToLocation + ", Status: " + status + ", Description: " + desc);
-        if (isRobotReady && stateManager.getState() != RogueTemiCore.State.LlmControl) {
+        if (isRobotReady && stateManager.getState() != HavocCore.State.LlmControl) {
             if (status.equals("complete")) {
                 currentLocation = goToLocation;
-                if (stateManager.getState() == RogueTemiCore.State.Patrolling) {
+                if (stateManager.getState() == HavocCore.State.Patrolling) {
                     if (goToLocation.equals(Config.getWorkLocation())) {
                         handleTransition(stateManager.patrolComplete(), "Detecting");
                     }
@@ -448,7 +448,7 @@ public class MainActivity extends AppCompatActivity implements
             temi.finishConversation();
 
 
-            if (stateManager.getState() == RogueTemiCore.State.Detecting ) {
+            if (stateManager.getState() == HavocCore.State.Detecting ) {
                 handleTransition(stateManager.personDetected(), "LlmControl");
                 // If no action is in progress, create a new conversation action
                 ConversationAction action = new ConversationAction(null, userInput, currentLocation, temi, this);

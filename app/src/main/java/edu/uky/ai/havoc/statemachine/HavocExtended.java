@@ -14,7 +14,7 @@ import edu.uky.ai.havoc.Config;
 import edu.uky.ai.havoc.R;
 import edu.uky.ai.havoc.streaming.WebRTCStreamingManager;
 
-public class RogueTemiExtended extends RogueTemiCore {
+public class HavocExtended extends HavocCore {
     private static final String TAG = "TemiEscortExtended";
     private final Context context;
     private Robot temi;
@@ -23,7 +23,7 @@ public class RogueTemiExtended extends RogueTemiCore {
     private WebRTCStreamingManager streamingManager;
 
     // Constructor
-    public RogueTemiExtended(Context context, Robot robot, ImageView faceImageView, WebRTCStreamingManager streamingManager) {
+    public HavocExtended(Context context, Robot robot, ImageView faceImageView, WebRTCStreamingManager streamingManager) {
         super();  // Call the parent constructor
         this.context = context;
         this.temi = robot;

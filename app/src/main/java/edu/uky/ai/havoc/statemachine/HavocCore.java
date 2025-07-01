@@ -8,7 +8,7 @@ package edu.uky.ai.havoc.statemachine;
 
 // line 2 "model.ump"
 // line 50 "model.ump"
-public class RogueTemiCore
+public class HavocCore
 {
 
     //------------------------
@@ -23,7 +23,7 @@ public class RogueTemiCore
     // CONSTRUCTOR
     //------------------------
 
-    public RogueTemiCore()
+    public HavocCore()
     {
         setState(State.HomeBase);
     }
