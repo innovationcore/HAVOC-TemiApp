@@ -1,4 +1,4 @@
-package edu.uky.ai.roguetemi.statemachine;
+package edu.uky.ai.havoc.statemachine;
 //%% NEW FILE RogueTemiCore BEGINS HERE %%
 
 /*PLEASE DO NOT EDIT THIS CODE*/

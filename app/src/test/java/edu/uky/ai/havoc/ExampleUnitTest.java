@@ -1,4 +1,4 @@
-package edu.uky.ai.roguetemi;
+package edu.uky.ai.havoc;
 
 import org.junit.Test;
 

@@ -1,7 +1,6 @@
-package edu.uky.ai.roguetemi.llm;
+package edu.uky.ai.havoc.llm;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
 
@@ -21,7 +20,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
-import edu.uky.ai.roguetemi.Config;
+import edu.uky.ai.havoc.Config;
 
 public class LlmConnector {
     private static final String TAG = "LlmConnector";

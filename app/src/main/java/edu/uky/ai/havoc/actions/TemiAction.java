@@ -1,9 +1,7 @@
 // TemiAction.java
-package edu.uky.ai.roguetemi.actions;
+package edu.uky.ai.havoc.actions;
 
 import androidx.annotation.Nullable;
-
-import org.json.JSONObject;
 
 /**
  * Interface representing a generic action that Temi can execute.

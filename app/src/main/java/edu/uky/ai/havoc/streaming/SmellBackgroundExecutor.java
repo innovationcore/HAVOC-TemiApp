@@ -1,4 +1,4 @@
-package edu.uky.ai.roguetemi.streaming;
+package edu.uky.ai.havoc.streaming;
 
 import android.util.Log;
 
@@ -7,7 +7,7 @@ import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import edu.uky.ai.roguetemi.MainActivity;
+import edu.uky.ai.havoc.MainActivity;
 
 public class SmellBackgroundExecutor {
     private static final String TAG = "SmellBackgroundExecutor";

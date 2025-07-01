@@ -1,4 +1,4 @@
-package edu.uky.ai.roguetemi.statemachine;
+package edu.uky.ai.havoc.statemachine;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -8,13 +8,11 @@ import android.widget.ImageView;
 
 import com.robotemi.sdk.Robot;
 
-import java.util.Arrays;
 import java.util.List;
 
-import edu.uky.ai.roguetemi.Config;
-import edu.uky.ai.roguetemi.MainActivity;
-import edu.uky.ai.roguetemi.R;
-import edu.uky.ai.roguetemi.streaming.WebRTCStreamingManager;
+import edu.uky.ai.havoc.Config;
+import edu.uky.ai.havoc.R;
+import edu.uky.ai.havoc.streaming.WebRTCStreamingManager;
 
 public class RogueTemiExtended extends RogueTemiCore {
     private static final String TAG = "TemiEscortExtended";

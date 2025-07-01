@@ -1,8 +1,6 @@
-package edu.uky.ai.roguetemi.actions;
+package edu.uky.ai.havoc.actions;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.Log;
 
 import androidx.annotation.Nullable;
@@ -20,11 +18,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import edu.uky.ai.roguetemi.R;
-import edu.uky.ai.roguetemi.Config;
-import edu.uky.ai.roguetemi.llm.LlmConnector;
-import edu.uky.ai.roguetemi.llm.LlmWrapper;
-import edu.uky.ai.roguetemi.llm.PromptLoader;
+import edu.uky.ai.havoc.R;
+import edu.uky.ai.havoc.Config;
+import edu.uky.ai.havoc.llm.LlmConnector;
+import edu.uky.ai.havoc.llm.LlmWrapper;
+import edu.uky.ai.havoc.llm.PromptLoader;
 
 public class ConversationAction implements TemiAction {
     private static final String TAG = "ConversationAction";

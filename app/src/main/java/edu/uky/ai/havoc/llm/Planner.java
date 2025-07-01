@@ -1,4 +1,4 @@
-package edu.uky.ai.roguetemi.llm;
+package edu.uky.ai.havoc.llm;
 
 import android.content.Context;
 import android.util.Log;
@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import edu.uky.ai.roguetemi.MainActivity;
-import edu.uky.ai.roguetemi.R;
-import edu.uky.ai.roguetemi.Config;
-import edu.uky.ai.roguetemi.actions.MoveAction;
-import edu.uky.ai.roguetemi.actions.ConversationAction;
-import edu.uky.ai.roguetemi.actions.SpeakActionWithoutResponse;
-import edu.uky.ai.roguetemi.actions.TemiAction;
+import edu.uky.ai.havoc.MainActivity;
+import edu.uky.ai.havoc.R;
+import edu.uky.ai.havoc.Config;
+import edu.uky.ai.havoc.actions.MoveAction;
+import edu.uky.ai.havoc.actions.ConversationAction;
+import edu.uky.ai.havoc.actions.SpeakActionWithoutResponse;
+import edu.uky.ai.havoc.actions.TemiAction;
 
 public class Planner {
     private static final String TAG = "Planner";

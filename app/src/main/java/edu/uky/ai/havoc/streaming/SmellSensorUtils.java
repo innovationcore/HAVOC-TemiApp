@@ -1,4 +1,4 @@
-package edu.uky.ai.roguetemi.streaming;
+package edu.uky.ai.havoc.streaming;
 
 import android.app.PendingIntent;
 import android.content.Context;

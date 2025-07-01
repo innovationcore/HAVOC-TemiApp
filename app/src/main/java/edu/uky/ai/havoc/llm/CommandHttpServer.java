@@ -1,4 +1,4 @@
-package edu.uky.ai.roguetemi.llm;
+package edu.uky.ai.havoc.llm;
 
 import android.util.Log;
 
@@ -7,7 +7,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-import edu.uky.ai.roguetemi.MainActivity;
+import edu.uky.ai.havoc.MainActivity;
 import fi.iki.elonen.NanoHTTPD;
 
 public class CommandHttpServer extends NanoHTTPD {

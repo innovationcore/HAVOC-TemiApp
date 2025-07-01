@@ -1,4 +1,4 @@
-package edu.uky.ai.roguetemi.actions;
+package edu.uky.ai.havoc.actions;
 
 import android.util.Log;
 
@@ -7,10 +7,7 @@ import androidx.annotation.NonNull;
 import com.robotemi.sdk.Robot;
 import com.robotemi.sdk.listeners.OnGoToLocationStatusChangedListener;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import edu.uky.ai.roguetemi.MainActivity;
+import edu.uky.ai.havoc.MainActivity;
 
 
 /**

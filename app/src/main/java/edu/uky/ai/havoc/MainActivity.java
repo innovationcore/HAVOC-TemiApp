@@ -1,4 +1,4 @@
-package edu.uky.ai.roguetemi;
+package edu.uky.ai.havoc;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -27,7 +27,6 @@ import com.robotemi.sdk.voice.WakeupOrigin;
 import com.robotemi.sdk.listeners.OnGoToLocationStatusChangedListener;
 
 import org.webrtc.EglBase;
-import org.webrtc.Logging;
 import org.webrtc.MediaStream;
 
 import java.util.ArrayList;
@@ -39,17 +38,17 @@ import java.util.concurrent.TimeUnit;
 import java.util.LinkedList;
 import java.util.Queue;
 
-import edu.uky.ai.roguetemi.actions.ActionCompletionListener;
-import edu.uky.ai.roguetemi.actions.ActionManager;
-import edu.uky.ai.roguetemi.actions.ConversationAction;
-import edu.uky.ai.roguetemi.actions.TemiAction;
-import edu.uky.ai.roguetemi.llm.Planner;
-import edu.uky.ai.roguetemi.statemachine.RogueTemiCore;
-import edu.uky.ai.roguetemi.statemachine.RogueTemiExtended;
-import edu.uky.ai.roguetemi.streaming.DataSendingBackgroundExecutor;
-import edu.uky.ai.roguetemi.streaming.SmellBackgroundExecutor;
-import edu.uky.ai.roguetemi.streaming.SmellSensorUtils;
-import edu.uky.ai.roguetemi.streaming.WebRTCStreamingManager;
+import edu.uky.ai.havoc.actions.ActionCompletionListener;
+import edu.uky.ai.havoc.actions.ActionManager;
+import edu.uky.ai.havoc.actions.ConversationAction;
+import edu.uky.ai.havoc.actions.TemiAction;
+import edu.uky.ai.havoc.llm.Planner;
+import edu.uky.ai.havoc.statemachine.RogueTemiCore;
+import edu.uky.ai.havoc.statemachine.RogueTemiExtended;
+import edu.uky.ai.havoc.streaming.DataSendingBackgroundExecutor;
+import edu.uky.ai.havoc.streaming.SmellBackgroundExecutor;
+import edu.uky.ai.havoc.streaming.SmellSensorUtils;
+import edu.uky.ai.havoc.streaming.WebRTCStreamingManager;
 //import edu.uky.ai.roguetemi.llm.Talker;
 
 public class MainActivity extends AppCompatActivity implements

@@ -1,4 +1,4 @@
-package edu.uky.ai.roguetemi.streaming;
+package edu.uky.ai.havoc.streaming;
 
 import android.content.Context;
 import android.os.Handler;
@@ -42,8 +42,8 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import edu.uky.ai.roguetemi.MainActivity;
-import edu.uky.ai.roguetemi.Config;
+import edu.uky.ai.havoc.MainActivity;
+import edu.uky.ai.havoc.Config;
 
 public class WebRTCStreamingManager {
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
