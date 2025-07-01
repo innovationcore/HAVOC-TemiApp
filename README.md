@@ -25,32 +25,32 @@ A typical "day in the life" of a Temi robot controlled by HAVOC unfolds as follo
 3.  **On Duty**: Upon arrival, it enters the `Detecting` state, actively waiting for user interaction or other events.
 
 4.  **LLM-Powered Task Execution**:
-  * **User Interaction**: Evan stands in front of the robot for 1.5 seconds. This prolonged presence is detected, transitioning the robot's state to `LlmControl`. The robot initiates dialogue: "Hello! How can I help you?" using a `ConversationAction` to manage the interaction.
-  * **Initial Command**: Evan says, "Can you ask Sam what time the meeting is?". The `Talker` LLM, operating within the `ConversationAction`, interprets this as a command requiring actions. It concludes its immediate conversation by saying, "Sure, I'll go ask Sam what time the meeting is," and signals the `Planner` to create a plan.
-  * **First Plan**: Based on the conversation log, the `Planner` generates its first action plan. The robot then begins executing it.
-    > ```json
-        > [
-        >   {"type": "move", "destination": "Sam"},
-        >   {"type": "speak", "message": "Hello Sam, what time is the meeting?", "wait_for_response": true}
-        > ]
-        > ```
-    > The `speak` action's `wait_for_response: true` flag is critical here; it ensures the system uses a `ConversationAction` to capture the response, rather than just making an announcement.
-  * **Dynamic Re-planning**: Sam replies, "I'm not sure, it's Cody's meeting." This new information is processed by the `Talker` LLM, which again concludes the conversation ("Okay, I'll go ask Cody.") and triggers the `Planner`. The `Planner` discards the old plan and generates a new one based on the *entire history* of actions and conversations.
-  * **Second Plan**: The robot now executes the updated plan.
-    > ```json
-        > [
-        >   {"type": "move", "destination": "Cody"},
-        >   {"type": "speak", "message": "Hello Cody, what time is the meeting?", "wait_for_response": true}
-        > ]
-        > ```
-  * **Information Acquired**: Cody responds, "It's at 3 PM." The `Talker` LLM understands the core question has been answered, ends the conversation with an acknowledgement, and triggers a final replan to complete the original user's request.
-  * **Final Plan**: The `Planner` generates the last plan to report back.
-    > ```json
-        > [
-        >   {"type": "move", "destination": "Evan"},
-        >   {"type": "speak", "message": "Sam didn't know about the meeting, so I asked Cody. The meeting is at 3pm.", "wait_for_response": false}
-        > ]
-        > ```
+    * **User Interaction**: Evan stands in front of the robot for 1.5 seconds. This prolonged presence is detected, transitioning the robot's state to `LlmControl`. The robot initiates dialogue: "Hello! How can I help you?" using a `ConversationAction` to manage the interaction.
+    * **Initial Command**: Evan says, "Can you ask Sam what time the meeting is?". The `Talker` LLM, operating within the `ConversationAction`, interprets this as a command requiring actions. It concludes its immediate conversation by saying, "Sure, I'll go ask Sam what time the meeting is," and signals the `Planner` to create a plan.
+    * **First Plan**: Based on the conversation log, the `Planner` generates its first action plan. The robot then begins executing it.
+        ```json
+        [
+          {"type": "move", "destination": "Sam"},
+          {"type": "speak", "message": "Hello Sam, what time is the meeting?", "wait_for_response": true}
+        ]
+        ```
+        > The `speak` action's `wait_for_response: true` flag is critical here; it ensures the system uses a `ConversationAction` to capture the response, rather than just making an announcement.
+    * **Dynamic Re-planning**: Sam replies, "I'm not sure, it's Cody's meeting." This new information is processed by the `Talker` LLM, which again concludes the conversation ("Okay, I'll go ask Cody.") and triggers the `Planner`. The `Planner` discards the old plan and generates a new one based on the *entire history* of actions and conversations.
+    * **Second Plan**: The robot now executes the updated plan.
+        ```json
+        [
+          {"type": "move", "destination": "Cody"},
+          {"type": "speak", "message": "Hello Cody, what time is the meeting?", "wait_for_response": true}
+        ]
+        ```
+    * **Information Acquired**: Cody responds, "It's at 3 PM." The `Talker` LLM understands the core question has been answered, ends the conversation with an acknowledgement, and triggers a final replan to complete the original user's request.
+    * **Final Plan**: The `Planner` generates the last plan to report back.
+        ```json
+        [
+          {"type": "move", "destination": "Evan"},
+          {"type": "speak", "message": "Sam didn't know about the meeting, so I asked Cody. The meeting is at 3pm.", "wait_for_response": false}
+        ]
+        ```
 5.  **Task Completion**: After delivering the message to Evan, the action queue is empty. The robot transitions back to `MovingToEntrance` and re-enters the `Detecting` state, ready for the next interaction.
 
 6.  **Scheduled Patrol**: At the top of every hour, a recurring trigger moves the robot into the `Patrolling` state. It completes its predefined route and then returns to the `Detecting` state at the entrance.
@@ -75,7 +75,7 @@ This project uses a properties file to manage all environment-specific variables
 
 1.  **Clone the Repository**
     ```bash
-    git clone [your-repository-url]
+    git clone https://github.com/innovationcore/HAVOC-TemiApp.git
     ```
 
 2.  **Create the Configuration File**
