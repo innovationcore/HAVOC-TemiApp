@@ -1,6 +1,6 @@
 # HAVOC: Healthcare Assistant with Video, Olfaction, and Conversation
 
-HAVOC (Healthcare Assistant with Video, Olfaction, and Conversation) is an advanced Android application designed to transform the Temi robot into an autonomous healthcare assistant. The project leverages Large Language Models (LLMs), real-time communication, and environmental sensor integration to create a robot capable of navigating complex environments, interacting naturally with people, and performing environmental monitoring tasks.
+HAVOC is an advanced Android application designed to transform the Temi robot into an autonomous healthcare assistant. The project leverages Large Language Models (LLMs), real-time communication, and environmental sensor integration to create a robot capable of navigating complex environments, interacting naturally with people, and performing environmental monitoring tasks.
 
 ## Features
 
