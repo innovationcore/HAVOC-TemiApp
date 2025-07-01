@@ -9,3 +9,5 @@
 .cxx
 local.properties
 app/src/main/res/raw/config.properties
+app/src/main/java/edu/uky/ai/havoc/actions/SpinAction.java
+app/src/main/java/edu/uky/ai/havoc/llm/CommandHttpServer.java
