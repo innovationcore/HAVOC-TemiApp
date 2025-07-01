@@ -1,5 +1,5 @@
 package edu.uky.ai.havoc.statemachine;
-//%% NEW FILE RogueTemiCore BEGINS HERE %%
+//%% NEW FILE HavocTemiCore BEGINS HERE %%
 
 /*PLEASE DO NOT EDIT THIS CODE*/
 /*This code was generated using the UMPLE 1.35.0.7523.c616a4dce modeling language!*/
@@ -15,7 +15,7 @@ public class HavocCore
     // MEMBER VARIABLES
     //------------------------
 
-    //RogueTemiCore State Machines
+    //HavocCore State Machines
     public enum State { HomeBase, MovingToEntrance, Detecting, Patrolling, LlmControl, MovingToHome }
     private State state;
 
