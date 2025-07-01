@@ -18,11 +18,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import edu.uky.ai.havoc.R;
 import edu.uky.ai.havoc.Config;
 import edu.uky.ai.havoc.llm.LlmConnector;
 import edu.uky.ai.havoc.llm.LlmWrapper;
-import edu.uky.ai.havoc.llm.PromptLoader;
 
 public class ConversationAction implements TemiAction {
     private static final String TAG = "ConversationAction";
@@ -65,7 +63,7 @@ public class ConversationAction implements TemiAction {
                 talkerWrapper.setUrl(Config.getTalkerUrl());
                 talkerWrapper.setModel(Config.getTalkerModel());
                 talkerWrapper.setRequiredTools(Collections.singletonList("conversation_over"));
-                talkerWrapper.setSystemPrompt(PromptLoader.loadPromptFromRaw(context, R.raw.talker_system_prompt));
+                talkerWrapper.setSystemPrompt(Config.getTalkerSystemPrompt(context));
 
                 conversationLog = runTemiConversation();
                 success = true;

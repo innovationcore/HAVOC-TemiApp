@@ -14,7 +14,6 @@ import java.util.Collections;
 import java.util.List;
 
 import edu.uky.ai.havoc.MainActivity;
-import edu.uky.ai.havoc.R;
 import edu.uky.ai.havoc.Config;
 import edu.uky.ai.havoc.actions.MoveAction;
 import edu.uky.ai.havoc.actions.ConversationAction;
@@ -47,7 +46,7 @@ public List<TemiAction> generatePlan(String actionHistory) {
     plannerWrapper.setUrl(Config.getPlannerUrl());
     plannerWrapper.setModel(Config.getPlannerModel());
     plannerWrapper.setRequiredTools(Collections.emptyList());
-    plannerWrapper.setSystemPrompt(PromptLoader.loadPromptFromRaw(context, R.raw.planner_system_prompt));
+    plannerWrapper.setSystemPrompt(Config.getPlannerSystemPrompt(context));
     plannerWrapper.addUserPrompt(planningPrompt);
 
     JSONObject plannerResponse = llmConnector.query(plannerWrapper); // This is the full response from the LLM

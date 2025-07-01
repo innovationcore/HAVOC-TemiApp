@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'edu.uky.ai.roguetemi'
+    namespace 'edu.uky.ai.havoc'
     compileSdk 33
 
     defaultConfig {
-        applicationId "edu.uky.ai.roguetemi"
+        applicationId "edu.uky.ai.havoc"
         minSdk 30
         targetSdk 33
         versionCode 1

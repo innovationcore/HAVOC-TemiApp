@@ -6,11 +6,56 @@ HAVOC (Healthcare Assistant with Video, Olfaction, and Conversation) is an advan
 
 - **Dual LLM-Powered Intelligence**: The robot's intelligence is driven by a two-tiered LLM system, using CAAI's LLM-Factory:
   - **Proactive Planning**: A "Planner" model analyzes conversation history and the robot's current context to generate a logical, step-by-step action plan (e.g., moving to a new location, speaking, etc.).
-  - **Natural Conversation**: A "Talker" model enables fluid, context-aware conversations with users. It can handle turn-by-turn dialogue and gracefully conclude interactions by executing a tool call whenever the conversation is over or the user gives a direct command.
+  - **Natural Conversation**: A "Talker" model enables fluid conversations with users. It gracefully conclude interactions by executing a tool call whenever the conversation is over or the user gives a direct command.
 - **Centralized Environmental & Safety Monitoring**: HAVOC continuously streams the robot's live video feed, positional coordinates, and raw smell sensor data via WebRTC to a companion repository, `HAVOC-Server`. This server acts as a centralized hub for all heavy environmental processing.
 - **Autonomous Operation**: The robot operates on a schedule, automatically navigating from its charging base to its work location during operational hours (8 AM to 5 PM on weekdays) and returning to charge when its battery is low or at the end of the day.
-- **Human Detection & Interaction**: In its active state, the robot uses its built-in sensors to detect when a person is nearby for a sustained period and can proactively initiate a conversation.
-- **Robust State-Driven Logic**: The robot's behavior is managed by a formal state machine, ensuring its actions are predictable, reliable, and recoverable.
+- **Human Detection & Interaction**: The robot uses its built-in sensors to detect when a person is nearby for a sustained period and can proactively initiate a conversation.
+- **Robust State-Driven Logic**: The robot's core behavior is managed by a formal state machine, ensuring its essential duties are predictably completed.
+
+---
+
+## Example Execution Flow
+
+A typical "day in the life" of a Temi robot controlled by HAVOC unfolds as follows:
+
+1.  **Initialization**: The robot begins in the `HomeBase` state, resting on its charging dock.
+
+2.  **Shift Start**: At 8:00 AM on a weekday, a scheduled timer (`checkAndMoveTemi`) fires. The robot transitions to the `MovingToEntrance` state and navigates to its designated `work_location`.
+
+3.  **On Duty**: Upon arrival, it enters the `Detecting` state, actively waiting for user interaction or other events.
+
+4.  **LLM-Powered Task Execution**:
+  * **User Interaction**: Evan stands in front of the robot for 1.5 seconds. This prolonged presence is detected, transitioning the robot's state to `LlmControl`. The robot initiates dialogue: "Hello! How can I help you?" using a `ConversationAction` to manage the interaction.
+  * **Initial Command**: Evan says, "Can you ask Sam what time the meeting is?". The `Talker` LLM, operating within the `ConversationAction`, interprets this as a command requiring actions. It concludes its immediate conversation by saying, "Sure, I'll go ask Sam what time the meeting is," and signals the `Planner` to create a plan.
+  * **First Plan**: Based on the conversation log, the `Planner` generates its first action plan. The robot then begins executing it.
+    > ```json
+        > [
+        >   {"type": "move", "destination": "Sam"},
+        >   {"type": "speak", "message": "Hello Sam, what time is the meeting?", "wait_for_response": true}
+        > ]
+        > ```
+    > The `speak` action's `wait_for_response: true` flag is critical here; it ensures the system uses a `ConversationAction` to capture the response, rather than just making an announcement.
+  * **Dynamic Re-planning**: Sam replies, "I'm not sure, it's Cody's meeting." This new information is processed by the `Talker` LLM, which again concludes the conversation ("Okay, I'll go ask Cody.") and triggers the `Planner`. The `Planner` discards the old plan and generates a new one based on the *entire history* of actions and conversations.
+  * **Second Plan**: The robot now executes the updated plan.
+    > ```json
+        > [
+        >   {"type": "move", "destination": "Cody"},
+        >   {"type": "speak", "message": "Hello Cody, what time is the meeting?", "wait_for_response": true}
+        > ]
+        > ```
+  * **Information Acquired**: Cody responds, "It's at 3 PM." The `Talker` LLM understands the core question has been answered, ends the conversation with an acknowledgement, and triggers a final replan to complete the original user's request.
+  * **Final Plan**: The `Planner` generates the last plan to report back.
+    > ```json
+        > [
+        >   {"type": "move", "destination": "Evan"},
+        >   {"type": "speak", "message": "Sam didn't know about the meeting, so I asked Cody. The meeting is at 3pm.", "wait_for_response": false}
+        > ]
+        > ```
+5.  **Task Completion**: After delivering the message to Evan, the action queue is empty. The robot transitions back to `MovingToEntrance` and re-enters the `Detecting` state, ready for the next interaction.
+
+6.  **Scheduled Patrol**: At the top of every hour, a recurring trigger moves the robot into the `Patrolling` state. It completes its predefined route and then returns to the `Detecting` state at the entrance.
+
+7.  **End of Day**: At 5:00 PM, the `checkAndMoveTemi` logic sends the robot home. It transitions to `MovingToHome`, navigates to its charging dock, and enters the `HomeBase` state for the night.
 
 ---
 
@@ -20,13 +65,13 @@ HAVOC (Healthcare Assistant with Video, Olfaction, and Conversation) is an advan
 
 -   An Android development environment (Android Studio).
 -   A Temi Robot with the developer SDK enabled.
--   Access to a WebRTC signaling server.
--   An API key for LLM-Factory.
+-   Access to a WebRTC signaling server, in this case `HAVOC-Server`.
+-   An API key for LLM-Factory, or any other OpenAI compatible API.
 -   A compatible USB smell sensor (if using this feature).
 
 ### Setup and Configuration
 
-This project uses a properties file to manage all environment-specific variables and API keys. This keeps sensitive information out of the codebase.
+This project uses a properties file to manage all environment-specific variables and API keys.
 
 1.  **Clone the Repository**
     ```bash
@@ -35,13 +80,13 @@ This project uses a properties file to manage all environment-specific variables
 
 2.  **Create the Configuration File**
   -   In the project, navigate to `app/src/main/res/raw/`.
-  -   Copy the `config.properties.example` file and rename the copy to `config.properties`.
+  -   Copy the `example_config.properties` file and rename the copy to `config.properties`.
 
 3.  **Edit `config.properties`**
   -   Open the `config.properties` file and fill in the values for your specific environment.
-  -   **`home_location` / `work_location`**: These must exactly match the names of the saved locations in your Temi robot's memory.
+  -   **`home_location` / `work_location`**: These must exactly match the names of saved locations in your Temi robot's memory.
   -   **`patrol_locations`**: A comma-separated list of saved locations for the robot to patrol.
-  -   **`webrtc_server_url`**: The full URL to your WebRTC signaling server.
+  -   **`webrtc_server_url`**: The full URL to your WebRTC signaling server (HAVOC-Server).
   -   **`llm_api_key`**: Your private API key for the LLM service.
   -   **`planner_url` / `talker_url`**: The API endpoints for your Planner and Talker LLMs.
 
@@ -49,7 +94,7 @@ This project uses a properties file to manage all environment-specific variables
 
 ## Core Logic: The State Machine
 
-The robot's entire operational logic is governed by a state machine defined in the `statemachine` package. This ensures that the robot is always in a well-defined state, and transitions between states are triggered by specific events, such as time of day, arrival at a location, or user interaction.
+The robot's basic operational logic is governed by a state machine defined in the `statemachine` package.
 
 ![State Machine Diagram](https://github.com/user-attachments/assets/f1a883cc-c20e-44c5-9a16-2ac3c6ce37f7)
 
@@ -71,12 +116,14 @@ The HAVOC codebase is organized into several packages, each handling specific fu
 ### Package: `edu.uky.ai.havoc`
 
 - **MainActivity.java**
-  - **Description**: The central orchestrator of the HAVOC application, managing the Android activity lifecycle and coordinating all core components. It initializes the Temi robot, sets up listeners for events (e.g., speech recognition, navigation, detection), and manages permissions. It also implements a periodic timer (`checkAndMoveTemi`) that evaluates the robot’s state, battery level, and time to trigger state transitions. The file handles user input, queues actions generated by the LLM, and ensures robust integration with the `ActionManager`, `Planner`, `StateManager`, and `WebRTCStreamingManager`.
+  - **Description**: The central orchestrator of the HAVOC application, managing the Android activity lifecycle and coordinating all core components. It initializes the Temi robot, sets up listeners for events (e.g., speech recognition, navigation, detection), and manages permissions. This is where both state transitions happen and where actions generated by the Planner LLM are executed.
+- **Config.java**
+  - **Description**: A static utility class responsible for loading and providing access to all application configurations. It reads key-value pairs from `config.properties` and also loads the raw text for system prompts from files within the `res/raw` directory.
 
 ### Package: `edu.uky.ai.havoc.statemachine`
 
 - **RogueTemiCore.java**
-  - **Description**: Defines the core state machine logic for the robot, implemented as a finite state machine with six states. It provides methods for state transitions triggered by events (e.g., `timeBetween9amAnd5pm`, `personDetected`) and ensures the robot’s behavior is predictable and recoverable. This file was generated using the UMPLE modeling language and serves as the foundational state management logic.
+  - **Description**: Defines the core state machine logic for the robot, implemented as a finite state machine with six states. This file was generated using the UMPLE modeling language and serves as the foundational state management logic.
 - **RogueTemiExtended.java**
   - **Description**: Extends `RogueTemiCore` to add Temi-specific functionality and UI updates, such as changing the robot’s face image based on its state and managing WebRTC streaming during patrols. It overrides key transition methods to include additional behavior, like initiating patrols or updating the UI.
 
@@ -85,7 +132,7 @@ The HAVOC codebase is organized into several packages, each handling specific fu
 - **SmellSensorUtils.java**
   - **Description**: Provides low-level logic to interface with a custom USB smell sensor, using the `usb-serial-for-android` library. It initializes the USB connection, reads sensor data, and formats it for streaming via WebRTC.
 - **DataSendingBackgroundExecutor.java**
-  - **Description**: Manages a background task that periodically sends the robot’s position data to a remote client via the WebRTC data channel.
+  - **Description**: Manages a background task that periodically sends the robot’s position data and the most recent smell data via the WebRTC data channel.
 - **SmellBackgroundExecutor.java**
   - **Description**: Runs a background task to periodically read data from the smell sensor using `SmellSensorUtils`.
 - **WebRTCStreamingManager.java**
@@ -97,37 +144,20 @@ The HAVOC codebase is organized into several packages, each handling specific fu
   - **Description**: A utility class that encapsulates the configuration and state for interacting with LLMs. It manages the system prompt, conversation history, and response data.
 - **LlmConnector.java**
   - **Description**: Handles communication with the LLM API, sending queries and processing responses. It defines tools (`parse_plan`, `conversation_over`) for structured outputs and supports different tool usage modes.
-- **PromptLoader.java**
-  - **Description**: A utility class for loading prompt text from raw resource files.
 - **Planner.java**
-  - **Description**: Generates action plans for the robot using an LLM. It constructs a prompt based on action history and current location, queries the LLM, and parses the response into a list of `TemiAction` objects.
+  - **Description**: Generates action plans for the robot using an LLM (Deepseek-R1 by default). It constructs a prompt based on action history and current location, queries the LLM, and parses the response into a list of `TemiAction` objects.
 
 ### Package: `edu.uky.ai.havoc.actions`
 
+- **TemiAction.java**
+  - **Description**: An interface defining the contract for actions the robot can execute.
+- **ActionManager.java**
+  - **Description**: Manages the execution of `TemiAction` objects in a sequential manner using a single-threaded executor.
 - **ActionCompletionListener.java**
   - **Description**: An interface defining a callback for action completion, allowing actions to notify listeners of their status.
 - **MoveAction.java**
   - **Description**: Implements a `TemiAction` for navigating the robot to a specified location, handling completion or failure.
-- **TemiAction.java**
-  - **Description**: An interface defining the contract for actions the robot can execute.
 - **SpeakActionWithoutResponse.java**
   - **Description**: Implements a `TemiAction` for making the robot speak a message without waiting for a user response.
-- **ActionManager.java**
-  - **Description**: Manages the execution of `TemiAction` objects in a sequential manner using a single-threaded executor.
 - **ConversationAction.java**
-  - **Description**: Implements a `TemiAction` for handling interactive conversations with users. It uses an LLM to generate responses, supports multi-turn dialogues, and ends conversations gracefully using a tool call.
-
----
-
-## Example Execution Flow
-
-A typical "day in the life" of HAVOC unfolds as follows:
-
-1. **Initialization**: The robot starts in the `HomeBase` state, on its charging dock.
-2. **Shift Start**: At 8 AM on a weekday, the `checkAndMoveTemi` timer detects it’s time to work. The robot transitions to `MovingToEntrance` and navigates to the `work_location`.
-3. **On Duty**: Upon arrival, it transitions to the `Detecting` state, waiting for events.
-4. **User Interaction**: A person stands in front of the robot for 1.5 seconds, triggering a transition to `LlmControl`. The robot says, "Hello! How can I help you?" and uses the `ConversationAction` to handle dialogue.
-5. **LLM-Powered Task**: The person asks, "Can you tell me where the cafeteria is?" The `Planner` generates a plan: `[{"type": "speak", "message": "Of course. Follow me."}, {"type": "move", "destination": "cafeteria"}]`. The robot executes these actions.
-6. **Task Completion**: After arriving, the robot says, "We have arrived." The action queue empties, and the robot transitions back to `MovingToEntrance`, then `Detecting`.
-7. **Scheduled Patrol**: At the top of the hour, the robot transitions to `Patrolling`, completes its route, and returns to `Detecting`.
-8. **End of Day**: At 5 PM, the `checkAndMoveTemi` logic triggers a transition to `MovingToHome`. The robot returns to its charging dock, entering `HomeBase`.
+  - **Description**: Implements a `TemiAction` for handling interactive conversations with users. It uses an LLM (LLaMa 3 by default) to generate responses, supports multi-turn dialogues, and ends conversations gracefully using a tool call whenever a direct command is received or the conversation naturally ends.
