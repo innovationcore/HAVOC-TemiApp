@@ -27,7 +27,6 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     configurations.implementation {
-        exclude group: 'com.google.code.gson', module: 'gson'
         exclude group: 'com.google.guava', module: 'listenablefuture'
     }
 
