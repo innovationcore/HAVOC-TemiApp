@@ -96,7 +96,8 @@ This project uses a properties file to manage all environment-specific variables
 
 The robot's basic operational logic is governed by a state machine defined in `umple/HavocCore.txt`.
 
-![State Machine Diagram](https://github.com/user-attachments/assets/f1a883cc-c20e-44c5-9a16-2ac3c6ce37f7)
+![State Machine Diagram](https://github.com/user-attachments/assets/35c0b11c-35ce-4529-8710-5f85b34888a7)
+
 
 ### State Descriptions
 
