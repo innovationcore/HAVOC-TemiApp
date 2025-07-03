@@ -49,7 +49,6 @@ import edu.uky.ai.havoc.streaming.DataSendingBackgroundExecutor;
 import edu.uky.ai.havoc.streaming.SmellBackgroundExecutor;
 import edu.uky.ai.havoc.streaming.SmellSensorUtils;
 import edu.uky.ai.havoc.streaming.WebRTCStreamingManager;
-//import edu.uky.ai.roguetemi.llm.Talker;
 
 public class MainActivity extends AppCompatActivity implements
         Robot.AsrListener,
@@ -215,7 +214,23 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     private void executeNextAction() {
-        if (isActionInProgress || actionQueue.isEmpty()) {
+        if (isActionInProgress) {
+            return;
+        }
+        if (actionQueue.isEmpty()) {
+            Log.d(TAG, "Action queue is empty, replanning.");
+            List<TemiAction> newPlan = planner.generatePlan(history);
+            if (newPlan.isEmpty()) {
+                Log.d(TAG, "Replan returned an empty plan, nothing to do.");
+                history = "";
+                boolean transitionSuccess = stateManager.emptyQueue();
+                handleTransition(transitionSuccess, "MovingToEntrance");
+                return;
+            }
+            for (TemiAction newAction : newPlan) {
+                actionQueue.offer(newAction);
+            }
+            executeNextAction();
             return;
         }
 
@@ -505,6 +520,13 @@ public class MainActivity extends AppCompatActivity implements
             Log.i(TAG, "Conversation action completed. Replanning.");
             actionQueue.clear();
             List<TemiAction> newPlan = planner.generatePlan(history);
+            if (newPlan.isEmpty()) {
+                Log.d(TAG, "Replan returned an empty plan, nothing to do.");
+                history = "";
+                boolean transitionSuccess = stateManager.emptyQueue();
+                handleTransition(transitionSuccess, "MovingToEntrance");
+                return;
+            }
             for (TemiAction newAction : newPlan) {
                 actionQueue.offer(newAction);
             }

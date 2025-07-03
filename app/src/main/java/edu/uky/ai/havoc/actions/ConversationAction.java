@@ -19,6 +19,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import edu.uky.ai.havoc.Config;
+import edu.uky.ai.havoc.MainActivity;
 import edu.uky.ai.havoc.llm.LlmConnector;
 import edu.uky.ai.havoc.llm.LlmWrapper;
 
@@ -27,7 +28,7 @@ public class ConversationAction implements TemiAction {
     private static final long RESPONSE_TIMEOUT_MS = 20_000; // 20 seconds for user to respond
     private final @Nullable String temiMessage;
     private final @Nullable String userMessage;
-    private final String currentLocation;
+//    private final String currentLocation;
     private final Robot temi;
     private final Context context;
     private LlmConnector llmConnector;
@@ -38,7 +39,7 @@ public class ConversationAction implements TemiAction {
     public ConversationAction(@Nullable String temiMessage, @Nullable String userMessage, String currentLocation, Robot robot, Context context) {
         this.temiMessage = temiMessage;
         this.userMessage = userMessage;
-        this.currentLocation = currentLocation;
+//        this.currentLocation = currentLocation;
         this.temi = robot;
         this.context = context;
         this.llmConnector = new LlmConnector();
@@ -231,8 +232,8 @@ public class ConversationAction implements TemiAction {
     }
 
     private String buildConversationLog() {
-        String locationName = currentLocation != null ?
-                currentLocation.substring(0, 1).toUpperCase() + currentLocation.substring(1) : "User";
+        String locationName = MainActivity.currentLocation != null ?
+                MainActivity.currentLocation.substring(0, 1).toUpperCase() + MainActivity.currentLocation.substring(1) : "User";
         StringBuilder conversationLog = new StringBuilder("Temi had the following conversation:\n");
         JSONArray messages = talkerWrapper.getHistory();
         for (int i = 0; i < messages.length(); i++) {

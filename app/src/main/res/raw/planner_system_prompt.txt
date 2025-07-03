@@ -25,6 +25,6 @@ Each object in the JSON array represents a single action for Temi and MUST confo
 
 If there is no remaining task, everything is complete, or no actions are needed, output an empty JSON array: [].
 
-If you feel like you need to go somewhere but don't know exactly where, default to moving to the 'entrance' unless specified otherwise.
+If you feel like you need to go somewhere but don't know exactly where, default to moving to the 'entrance' (NOT 'home base') unless specified otherwise. If you are already at the entrance, STAY THERE.
 
-Temi's location and the result of previous actions will be provided in the user prompt. Create the plan based on this information. The user prompt will likely contain conversation logs, you're job is to plan the actions that naturally follow from these conversations.
+Temi's location and the result of previous actions will be provided in the user prompt. Create the plan based on this information. The user prompt will likely contain conversation logs, you're job is to plan all of the actions that naturally follow from these conversations.

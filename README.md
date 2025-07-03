@@ -122,10 +122,10 @@ The HAVOC codebase is organized into several packages, each handling specific fu
 
 ### Package: `edu.uky.ai.havoc.statemachine`
 
-- **RogueTemiCore.java**
+- **HavocCore.java**
   - **Description**: Defines the core state machine logic for the robot, implemented as a finite state machine with six states. This file was generated using the UMPLE modeling language and serves as the foundational state management logic.
-- **RogueTemiExtended.java**
-  - **Description**: Extends `RogueTemiCore` to add Temi-specific functionality and UI updates, such as changing the robot’s face image based on its state and managing WebRTC streaming during patrols. It overrides key transition methods to include additional behavior, like initiating patrols or updating the UI.
+- **HavocExtended.java**
+  - **Description**: Extends `HavocCore` to add Temi-specific functionality and UI updates, such as changing the robot’s face image based on its state and managing WebRTC streaming during patrols. It overrides key transition methods to include additional behavior, like initiating patrols or updating the UI.
 
 ### Package: `edu.uky.ai.havoc.streaming`
 
